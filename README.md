@@ -26,7 +26,6 @@ Before running this script for the first time, be sure to modify the variables /
 * `share_username` User who has read/write access to `share_remote_path`.
 * `share_password` Alphanumeric password for `share_username`.
 * `share_domain` Domain name for `share_username`. This variable is optional; leave blank if not in a domain environment.
-* `share_mount_point` Path at which `share_remote_path` will be mounted. Will be created if it does not already exist. Should not contain spaces (unescaped spaces might work but are untested).
 * `email_enabled` Whether email notifications are sent on script completion. Valid options are 'true' and 'false'.
 * `email_server` FQDN of SMTP relay.
 * `email_port` Port on which SMTP relay listens.
@@ -39,7 +38,7 @@ Before running this script for the first time, be sure to modify the variables /
 
 ## Job types
 
-`dockback` supports a variety of backup types. One type is required per job.
+dockback supports a variety of backup types. One type is required per job.
 
 ### `compress_directory`
 
@@ -87,6 +86,35 @@ Example job string using all options:
 
 `'job_name=container1|job_type=mysql_dump|container_name=container1|db=exampledb|compress=true'`
 
+## Installing
+
+To install dockback, run the following commands.
+
+```bash
+sudo git clone https://github.com/ianharrier/dockback.git /opt/dockback
+sudo chmod +x /opt/dockback/dockback
+sudo ln -s /opt/dockback/dockback /usr/local/sbin/dockback
+```
+
+After dockback has been installed, you should modify the configuration file at `/opt/dockback/config`.
+
+You should also check if the dependencies are installed with the following command.
+
+```bash
+dockback test dep
+```
+
+## Un-installing
+
+If you need to uninstall dockback, run the following commands after ensuring the backup share is unmounted.
+
+```bash
+sudo rm -rf /opt/dockback
+sudo rm /usr/local/sbin/dockback
+sudo rm /etc/conf.d/dockback
+sudo rmdir /mnt/share/dockback
+```
+
 ## Future work
 
 The following features will be added in a future release, in no particular order:
@@ -97,6 +125,6 @@ The following features will be added in a future release, in no particular order
 4. Allow custom scheduling options.
 5. Allow SMTP authentication.
 6. Check for `mailx` errors.
-7. Ability to backup data by "reaching insude" containers (i.e. without using volumes).
+7. Ability to backup data by "reaching inside" containers (i.e. without using volumes).
 8. Add a compress option to `file_copy`, in case backup files are not already compressed.
-9. Allow `dockback` to run from a Docker container.
+9. Allow dockback to run from a Docker container.
