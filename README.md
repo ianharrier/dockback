@@ -112,7 +112,7 @@ If you need to uninstall dockback, run the following commands after ensuring the
 sudo rm -rf /opt/dockback
 sudo rm /usr/local/sbin/dockback
 sudo rm /etc/conf.d/dockback
-sudo rmdir /mnt/share/dockback
+sudo rmdir /mnt/shares/dockback
 ```
 
 ## Future work
