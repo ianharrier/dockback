@@ -77,7 +77,7 @@ USAGE
         job         display job configuration options
         email       configure email settings
         share       configure file share settings
-        schedule    configure dockback to run every 4 hours
+        schedule    configure dockback to run every $backup_frequency_hours hours
 END_OF_USAGE
                     ;;
             esac
@@ -159,12 +159,12 @@ get_job() {
 
 #===  FUNCTION  ================================================================
 #         NAME:  schedule_script
-#  DESCRIPTION:  Schedule the script to run every 6 hours.
+#  DESCRIPTION:  Schedule the script to run every backup_frequency_hours hours.
 #===============================================================================
 schedule_script() {
     local script_path='/usr/local/sbin/dockback'
     local cron_path='/etc/cron.d/dockback'
-    local cron_job="0 */6 * * * root [ -x $script_path ] && $script_path up all"
+    local cron_job="0 */$backup_frequency_hours * * * root [ -x $script_path ] && $script_path up all"
 
     # Check if script_path is scheduled
     if grep -Fxqs "$cron_job" "$cron_path"; then

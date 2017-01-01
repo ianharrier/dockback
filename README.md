@@ -32,6 +32,7 @@ Before running this script for the first time, be sure to modify the variables /
 * `email_from` Email address from which notification emails will be sent. Should be formatted as `username@domain.tld`.
 * `email_to` Email address to which notification emails will be send. Should be formatted as `username@domain.tld`.
 * `email_subject` Subject on the notification email.
+* `backup_frequency_hours` The frequency at which the `cron` will run `dockback up all`.
 * `backup_jobs` Array containing the backup job strings, one per element. Job strings should be formatted as `'key1=value1|key2=value2|key3=value3'` and should contain the following required keys:
  * `job_name` Name of the backup job. Usually similar or identical to the container name. For example: `'job_name=container1|...'`
  * `job_type` Type of backup job. For example: `'job_name=container1|job_type=compress_directory|...'`
