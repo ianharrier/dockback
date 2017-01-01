@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#===============================================================================
+#         FILE:  config
+#
+#  DESCRIPTION:  Configuration file for dockback
+#
+#       AUTHOR:  Ian Harrier
+#      VERSION:  0.1
+#      LICENSE:  MIT License
+#===============================================================================
+
+#-------------------------------------------------------------------------------
+#  User-defined variables
+#-------------------------------------------------------------------------------
+
+share_remote_path='//ad.domain.tld/DFS/Share/Docker Backups'
+share_username='BackupUser'
+share_password='BackupPassw0rd'
+share_domain='ad.domain.tld'
+
+email_enabled=true
+email_server='smtp.ad.domain.tld'
+email_port='25'
+email_from='do-not-reply@domain.tld'
+email_to='admin@domain.tld'
+email_subject='dockback report'
+
+backup_jobs[0]='job_name=webapp|job_type=compress_directory|directory_path=/docker/webapp'
+backup_jobs[1]='job_name=webapp-db|job_type=mysql_dump|container_name=webapp-db|db=webappdb|compress=true'
+backup_jobs[2]='job_name=confluence|job_type=file_copy|file_path=/docker/confluence/home/backups/*.zip|delete_after_copy=false'
