@@ -119,12 +119,9 @@ END_OF_USAGE
 #  DESCRIPTION:  Import and check the dockback configuration file.              # config validation not yet implemented
 #===============================================================================
 get_config() {
-    echo -n "[I] Importing configuration file... "
     if [[ -e $config_path ]]; then
         source $config_path
-        echo "Done"
     else
-        echo "Failed"
         echo "[E] Exiting because configuration file '$config_path' is missing."
         ((errors++))
         display_alerts
