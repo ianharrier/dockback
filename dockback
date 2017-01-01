@@ -506,11 +506,12 @@ cleanup_jobs() {
 #  Script body
 #-------------------------------------------------------------------------------
 
+get_config
+
 case "$1" in
     up )
         case "$2" in
             all )
-                get_config
                 check_dependencies
                 mount_share
                 execute_jobs
@@ -525,7 +526,6 @@ case "$1" in
                         display_usage up job
                         ;;
                     * )
-                        get_config
                         check_dependencies
                         mount_share
                         execute_job "$3"
@@ -630,14 +630,12 @@ case "$1" in
     test )
         case "$2" in
             email )
-                get_config
                 check_dependencies
                 email_alerts
                 display_alerts
                 exit 0
                 ;;
             share )
-                get_config
                 check_dependencies
                 mount_share
                 unmount_share
