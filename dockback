@@ -167,7 +167,7 @@ schedule_script() {
     local cron_job="0 */6 * * * root [ -x $script_path ] && $script_path up all"
 
     # Check if script_path is scheduled
-    if grep -Fxq "$cron_job" "$cron_path"; then
+    if grep -Fxqs "$cron_job" "$cron_path"; then
         echo "[I] '$script_path' is already scheduled."
     else
         echo -n "[W] '$script_path' is not scheduled. Scheduling... "
@@ -175,7 +175,7 @@ schedule_script() {
         # Replace the file (if it exists) with cron_job
         echo "$cron_job" > $cron_path
         # Make sure it worked
-        if grep -Fxq "$cron_job" $cron_path; then
+        if grep -Fxqs "$cron_job" $cron_path; then
             echo "Done"
         else
             echo "Failed"
