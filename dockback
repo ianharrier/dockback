@@ -127,7 +127,6 @@ get_config() {
         echo "Failed"
         echo "[E] Exiting because configuration file '$config_path' is missing."
         ((errors++))
-        email_alerts
         display_alerts
         exit 1
     fi
