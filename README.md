@@ -20,7 +20,7 @@ A couple of examples:
 
 ## Variables
 
-Before running this script for the first time, be sure to modify the variables / arrays in the **User-defined variables** section of the script:
+Before running this script for the first time, be sure to modify the variables / arrays in the `config` file:
 
 * `share_remote_path` UNC path of the remote CIFS share (e.g. `'//server/share/path'`). May contain unescaped spaces (e.g. `'//server/share/folder with spaces'`).
 * `share_username` User who has read/write access to `share_remote_path`.
