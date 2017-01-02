@@ -27,8 +27,6 @@ Before running this script for the first time, be sure to modify the variables /
 * `share_password` Alphanumeric password for `share_username`.
 * `share_domain` Domain name for `share_username`. This variable is optional; leave blank if not in a domain environment.
 * `email_enabled` Whether email notifications are sent on script completion. Valid options are 'true' and 'false'.
-* `email_server` FQDN of SMTP relay.
-* `email_port` Port on which SMTP relay listens.
 * `email_from` Email address from which notification emails will be sent. Should be formatted as `username@domain.tld`.
 * `email_to` Email address to which notification emails will be send. Should be formatted as `username@domain.tld`.
 * `email_subject` Subject on the notification email.
@@ -105,6 +103,19 @@ You should also check if the dependencies are installed with the following comma
 dockback test dep
 ```
 
+Note that dockback will use the system mail configuration. On Ubuntu 16.04 (and others) for example, you can configure postfix to forward all emails to an external unauthenticated SMTP relay by replacing `mail.domain.tld` with your SMTP replay.
+
+```bash
+# Preselect the configuration options for postfix
+sudo debconf-set-selections <<EOF
+postfix postfix/mailname string $(hostname --fqdn)
+postfix postfix/main_mailer_type select Satellite system
+postfix postfix/relayhost string mail.domain.tld
+EOF
+# Install mailutils (which includes postfix)
+sudo apt -y install mailutils
+```
+
 ## Un-installing
 
 If you need to uninstall dockback, run the following commands after ensuring the backup share is unmounted.
@@ -125,7 +136,7 @@ The following features will be added in a future release, in no particular order
 3. Allow compression formats other than ZIP.
 4. Allow custom scheduling options.
 5. Allow SMTP authentication.
-6. Check for `mailx` errors.
+6. Check for `mail` errors.
 7. Ability to backup data by "reaching inside" containers (i.e. without using volumes).
 8. Add a compress option to `file_copy`, in case backup files are not already compressed.
 9. Allow dockback to run from a Docker container.
