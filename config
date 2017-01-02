@@ -19,8 +19,6 @@ share_password='BackupPassw0rd'
 share_domain='ad.domain.tld'
 
 email_enabled=true
-email_server='smtp.ad.domain.tld'
-email_port='25'
 email_from='do-not-reply@domain.tld'
 email_to='admin@domain.tld'
 email_subject='dockback report'
