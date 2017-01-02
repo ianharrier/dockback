@@ -103,7 +103,7 @@ You should also check if the dependencies are installed with the following comma
 dockback test dep
 ```
 
-Note that dockback will use the system mail configuration. On Ubuntu 16.04 (and others) for example, you can configure postfix to forward all emails to an external unauthenticated SMTP relay by replacing `mail.domain.tld` with your SMTP replay.
+Note that dockback will use the system mail configuration. On Ubuntu 16.04 (and others) for example, you can configure postfix to forward all emails to an external unauthenticated SMTP relay by replacing `mail.domain.tld` with your SMTP relay.
 
 ```bash
 # Preselect the configuration options for postfix
