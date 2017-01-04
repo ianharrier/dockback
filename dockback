@@ -27,6 +27,9 @@ config_path='/opt/dockback/config'
 warnings=0
 errors=0
 
+# Start the script with a blank email body
+email_body=''
+
 #===  FUNCTION  ================================================================
 #         NAME:  display_usage
 #  DESCRIPTION:  Display usage information for this script.
@@ -118,6 +121,22 @@ END_OF_USAGE
 }
 
 #===  FUNCTION  ================================================================
+#         NAME:  echo_email
+#  DESCRIPTION:  echo string and append to email body.
+# PARAMETER  1:  string (or '-n' for no new line)
+# PARAMETER  2:  string (if $1 is '-n')
+#===============================================================================
+echo_email() {
+    if [[ "$1" = "-n" ]]; then
+        echo -n "$2"
+        log="$log$2"
+    else
+        echo "$1"
+        log="$log$1"$'\n'
+    fi
+}
+
+#===  FUNCTION  ================================================================
 #         NAME:  get_config
 #  DESCRIPTION:  Import and check the dockback configuration file.              # config validation not yet implemented
 #===============================================================================
@@ -125,7 +144,7 @@ get_config() {
     if [[ -e $config_path ]]; then
         source $config_path
     else
-        echo "[E] Exiting because configuration file '$config_path' is missing."
+        echo_email "[E] Exiting because configuration file '$config_path' is missing."
         ((errors++))
         display_alerts
         exit 1
@@ -168,18 +187,18 @@ schedule_script() {
 
     # Check if script_path is scheduled
     if grep -Fxqs "$cron_job" "$cron_path"; then
-        echo "[I] '$script_path' is already scheduled."
+        echo_email "[I] '$script_path' is already scheduled."
     else
-        echo -n "[W] '$script_path' is not scheduled. Scheduling... "
+        echo_email -n "[W] '$script_path' is not scheduled. Scheduling... "
         ((warnings++))
         # Replace the file (if it exists) with cron_job
         echo "$cron_job" > $cron_path
         # Make sure it worked
         if grep -Fxqs "$cron_job" $cron_path; then
-            echo "Done"
+            echo_email "Done"
         else
-            echo "Failed"
-            echo "[E] '$script_path' could not be scheduled."
+            echo_email "Failed"
+            echo_email "[E] '$script_path' could not be scheduled."
             ((errors++))
         fi
     fi
@@ -196,47 +215,47 @@ check_dependencies() {
 
     if which mount.cifs >/dev/null 2>&1; then
         if [[ "$1" = "verbose" ]]; then
-            echo "[I] 'mount.cifs' is installed"
+            echo_email "[I] 'mount.cifs' is installed"
         fi
     else
-        echo "[E] 'mount.cifs' cannot be found. Please install 'cifs-utils'."
+        echo_email "[E] 'mount.cifs' cannot be found. Please install 'cifs-utils'."
         ((errors++))
         ((missing++))
     fi
 
     if which zip >/dev/null 2>&1; then
         if [[ "$1" = "verbose" ]]; then
-            echo "[I] 'zip' is installed."
+            echo_email "[I] 'zip' is installed."
         fi
     else
-        echo "[E] 'zip' cannot be found. Please install 'zip'."
+        echo_email "[E] 'zip' cannot be found. Please install 'zip'."
         ((errors++))
         ((missing++))
     fi
 
     if which sendmail >/dev/null 2>&1; then
         if [[ "$1" = "verbose" ]]; then
-            echo "[I] 'sendmail' is installed."
+            echo_email "[I] 'sendmail' is installed."
         fi
     else
-        echo "[E] 'sendmail' cannot be found. Please install 'mailutils'."
+        echo_email "[E] 'sendmail' cannot be found. Please install 'mailutils'."
         ((errors++))
         ((missing++))
     fi
 
     if [[ $missing > 0 ]]; then
         if [[ "$1" = "verbose" ]]; then
-            echo "[E] Exiting because not all dependencies are installed."
+            echo_email "[E] Exiting because not all dependencies are installed."
         else
-            echo "[E] Exiting because not all dependencies are installed. Please run"
-            echo "    'dockback test dep' for more information."
+            echo_email "[E] Exiting because not all dependencies are installed. Please run"
+            echo_email "    'dockback test dep' for more information."
         fi
         ((errors++))
         email_alerts
         display_alerts
         exit 1
     else
-        echo "[I] All dependencies are installed."
+        echo_email "[I] All dependencies are installed."
     fi
 }
 
@@ -246,7 +265,7 @@ check_dependencies() {
 #===============================================================================
 email_alerts() {
     if [[ $email_enabled = true ]]; then
-        echo -n "[I] Attempting to send email notification... "
+        echo_email -n "[I] Attempting to send email notification... "
         (
             echo "From: $email_from"
             echo "Subject: $email_subject"
@@ -254,13 +273,12 @@ email_alerts() {
             echo "Content-Type: text/html"
             echo "Content-Disposition: inline"
             echo "<html><body><pre>"
-            echo "$email_body"
-            display_alerts
+            echo "$email_body$(display_alerts)"
             echo "</pre></body></html>"
         ) | sendmail $email_to
-        echo "Done"
+        echo_email "Done"
     else
-        echo "[I] Email notifications are disabled."
+        echo_email "[I] Email notifications are disabled."
     fi
 }
 
@@ -270,13 +288,13 @@ email_alerts() {
 #===============================================================================
 display_alerts() {
     if [[ $errors > 0 ]]; then
-        echo -n "[E] "
+        echo_email -n "[E] "
     elif [[ $warnings > 0 ]]; then
-        echo -n "[W] "
+        echo_email -n "[W] "
     else
-        echo -n "[I] "
+        echo_email -n "[I] "
     fi
-    echo "dockback finished with $warnings warning(s) and $errors error(s)."
+    echo_email "dockback finished with $warnings warning(s) and $errors error(s)."
 }
 
 #===  FUNCTION  ================================================================
@@ -286,25 +304,25 @@ display_alerts() {
 mount_share() {
     # Create share_mount_point if it does not exist
     if [[ ! -d "$share_mount_point" ]]; then
-        echo -n "[W] Creating backup share mount point '$share_mount_point'... "
+        echo_email -n "[W] Creating backup share mount point '$share_mount_point'... "
         ((warnings++))
         mkdir -p $share_mount_point >/dev/null 2>&1
 
         # Check if mount point was created
         if [[ ! -d "$share_mount_point" ]]; then
-            echo "Failed"
-            echo "[E] Exiting because '$share_mount_point' could not be created."
+            echo_email "Failed"
+            echo_email "[E] Exiting because '$share_mount_point' could not be created."
             ((errors++))
             email_alerts
             display_alerts
             exit 1
         else
-            echo "Done"
+            echo_email "Done"
         fi
     fi
 
     # Mount share_remote_path to share_mount_point
-    echo -n "[I] Mounting backup share... "
+    echo_email -n "[I] Mounting backup share... "
     if [[ $share_domain ]]; then
         mount.cifs "$share_remote_path" $share_mount_point -o username=$share_username,password=$share_password,domain=$share_domain >/dev/null 2>&1
     else
@@ -313,14 +331,14 @@ mount_share() {
 
     # Check if share was mounted
     if [[ ! $(df -h | grep "$share_remote_path") ]]; then
-        echo "Failed"
-        echo "[E] Exiting because '$share_remote_path' could not be mounted."
+        echo_email "Failed"
+        echo_email "[E] Exiting because '$share_remote_path' could not be mounted."
         ((errors++))
         email_alerts
         display_alerts
         exit 1
     else
-        echo "Done"
+        echo_email "Done"
     fi
 }
 
@@ -330,23 +348,23 @@ mount_share() {
 #===============================================================================
 unmount_share() {
     # Unmount share_remote_path from share_mount_point
-    echo -n "[I] Unmounting backup share... "
+    echo_email -n "[I] Unmounting backup share... "
     umount $share_mount_point
 
     # Exit if share_remote_path could not be unmounted
     if [[ $(df -h | grep $share_mount_point) ]]; then
-        echo "Failed"
-        echo -n "[W] Trying to unmount '$share_mount_point' again... "
+        echo_email "Failed"
+        echo_email -n "[W] Trying to unmount '$share_mount_point' again... "
         ((warnings++))
         umount $share_mount_point
         if [[ $(df -h | grep $share_mount_point) ]]; then
-            echo "Failed"
-            echo "[E] '$share_mount_point' could not be unmounted."
+            echo_email "Failed"
+            echo_email "[E] '$share_mount_point' could not be unmounted."
             ((errors++))
         fi
     fi
 
-    echo "Done"
+    echo_email "Done"
 }
 
 #===  FUNCTION  ================================================================
@@ -360,10 +378,10 @@ execute_jobs() {
     for job in ${backup_jobs[@]}; do
         # Make sure the job has a job_name
         if [[ $(get_value $job job_name) ]]; then
-            echo -n "[I] Processing job '$(get_value $job job_name)'... "
+            echo_email -n "[I] Processing job '$(get_value $job job_name)'... "
         else
-            echo "Failed"
-            echo "[E] Skipping job '$job' because job_name is missing."
+            echo_email "Failed"
+            echo_email "[E] Skipping job '$job' because job_name is missing."
             ((errors++))
             continue
         fi
@@ -383,14 +401,14 @@ execute_jobs() {
                     # directory_path exists; backup directory_path
                     zip -q -r $temp_directory_job/$(get_value $job job_name)_$(date +%Y%m%dT%H%M%S%z).zip $(get_value $job directory_path) >/dev/null 2>&1
                 else
-                    echo "Failed"
-                    echo "[E] Skipping job '$(get_value $job job_name)' because directory_path '$(get_value $job directory_path)' is nonexistent."
+                    echo_email "Failed"
+                    echo_email "[E] Skipping job '$(get_value $job job_name)' because directory_path '$(get_value $job directory_path)' is nonexistent."
                     ((errors++))
                     continue
                 fi
             else
-                echo "Failed"
-                echo "[E] Skipping job '$(get_value $job job_name)' because directory_path is missing."
+                echo_email "Failed"
+                echo_email "[E] Skipping job '$(get_value $job job_name)' because directory_path is missing."
                 ((errors++))
                 continue
             fi
@@ -410,14 +428,14 @@ execute_jobs() {
                         cp -p $(find $(get_value $job file_path)) $temp_directory_job
                     fi
                 else
-                    echo "Failed"
-                    echo "[E] Skipping job '$(get_value $job job_name)' because file_path '$(get_value $job file_path)' is nonexistent."
+                    echo_email "Failed"
+                    echo_email "[E] Skipping job '$(get_value $job job_name)' because file_path '$(get_value $job file_path)' is nonexistent."
                     ((errors++))
                     continue
                 fi
             else
-                echo "Failed"
-                echo "[E] Skipping job '$(get_value $job job_name)' because file_path is missing."
+                echo_email "Failed"
+                echo_email "[E] Skipping job '$(get_value $job job_name)' because file_path is missing."
                 ((errors++))
                 continue
             fi
@@ -440,15 +458,15 @@ execute_jobs() {
                     if [[ -f "$temp_directory_job/$mysql_dump_file_name.zip" ]]; then
                         rm $temp_directory_job/$mysql_dump_file_name.sql
                     else
-                        echo "Failed"
-                        echo "[E] '$mysql_dump_file_name.sql' could not be compressed."
+                        echo_email "Failed"
+                        echo_email "[E] '$mysql_dump_file_name.sql' could not be compressed."
                         ((errors++))
                         continue
                     fi
                 fi
             else
-                echo "Failed"
-                echo "[E] Skipping job '$(get_value $job job_name)' because container_name is missing."
+                echo_email "Failed"
+                echo_email "[E] Skipping job '$(get_value $job job_name)' because container_name is missing."
                 ((errors++))
                 continue
             fi
@@ -456,19 +474,19 @@ execute_jobs() {
         #  invalid job_type
         #-----------------------------------------------------------------------
         else
-            echo "Failed"
-            echo "[E] Skipping job '$(get_value $job job_name)' because job_type '$(get_value $job job_type)' is invalid."
+            echo_email "Failed"
+            echo_email "[E] Skipping job '$(get_value $job job_name)' because job_type '$(get_value $job job_type)' is invalid."
             ((errors++))
             continue
         fi
 
-        echo "Done"
+        echo_email "Done"
     done
 
-    echo -n "[I] Moving backups to file share... "
+    echo_email -n "[I] Moving backups to file share... "
     mv $temp_directory/*/* $share_mount_point
     rm -rf $temp_directory
-    echo "Done"
+    echo_email "Done"
 }
 
 #===  FUNCTION  ================================================================
@@ -484,7 +502,7 @@ execute_job() {
         backup_jobs[0]=$job          # Rebuild array with single job
         execute_jobs                 # Execute the backup
     else
-        echo "[E] Job '$1' does not exist."
+        echo_email "[E] Job '$1' does not exist."
         ((errors++))
     fi
 }
