@@ -13,6 +13,9 @@
 #  Internally-defined variables
 #-------------------------------------------------------------------------------
 
+# Allow cron job(s) to locate system utilities
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
 # Path at which `share_remote_path` will be mounted. Will be created if it does
 # not already exist.
 share_mount_point='/mnt/shares/dockback'
@@ -161,7 +164,7 @@ get_job() {
 schedule_script() {
     local script_path='/usr/local/sbin/dockback'
     local cron_path='/etc/cron.d/dockback'
-    local cron_job="0 */$backup_frequency_hours * * * root [ -x $script_path ] && $script_path up all"
+    local cron_job="0 */$backup_frequency_hours * * * root if test -x /usr/local/sbin/dockback; then /usr/local/sbin/dockback up all; else true; fi"
 
     # Check if script_path is scheduled
     if grep -Fxqs "$cron_job" "$cron_path"; then
