@@ -129,10 +129,10 @@ END_OF_USAGE
 echo_email() {
     if [[ "$1" = "-n" ]]; then
         echo -n "$2"
-        log="$log$2"
+        log="$email_body$2"
     else
         echo "$1"
-        log="$log$1"$'\n'
+        log="$email_body$1"$'\n'
     fi
 }
 
