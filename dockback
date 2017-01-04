@@ -265,7 +265,7 @@ check_dependencies() {
 #===============================================================================
 email_alerts() {
     if [[ $email_enabled = true ]]; then
-        echo_email -n "[I] Attempting to send email notification... "
+        echo -n "[I] Attempting to send email notification... "
         (
             echo "From: $email_from"
             echo "Subject: $email_subject"
@@ -276,9 +276,9 @@ email_alerts() {
             echo "$email_body$(display_alerts)"
             echo "</pre></body></html>"
         ) | sendmail $email_to
-        echo_email "Done"
+        echo "Done"
     else
-        echo_email "[I] Email notifications are disabled."
+        echo "[I] Email notifications are disabled."
     fi
 }
 
