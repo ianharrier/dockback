@@ -2,7 +2,7 @@
 
 Backup data in Docker containers to a file share
 
-**WARNING: This project is under construction. Not ready for production use.**
+**WARNING: This project is under construction. Some features have not yet been implemented. Please test and use at your own risk.**
 
 ## About
 
