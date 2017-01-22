@@ -41,14 +41,12 @@ display_usage() {
             case "$2" in
                 job )
                     cat << END_OF_USAGE
-USAGE
-    dockback up job <job_name>
+usage: dockback up job <job_name>
 END_OF_USAGE
                     ;;
                 * )
                     cat << END_OF_USAGE
-USAGE
-    dockback up [all|job]
+usage: dockback up [all|job]
         all         run all backup jobs
         job         run a specific backup job
 END_OF_USAGE
@@ -57,8 +55,7 @@ END_OF_USAGE
             ;;
         down )
             cat << END_OF_USAGE
-USAGE
-    dockback down [all|job]
+usage: dockback down [all|job]
         all         restore all jobs
         job         restore a specific job
 END_OF_USAGE
@@ -67,8 +64,7 @@ END_OF_USAGE
             case "$2" in
                 job )
                     cat << END_OF_USAGE
-USAGE
-    dockback config job [add|edit|enable|disable|remove]
+usage: dockback config job [add|edit|enable|disable|remove]
         add         create a new job
         edit        edit an existing job
         enable      allow a job to run automatically (enabled by default)
@@ -78,8 +74,7 @@ END_OF_USAGE
                     ;;
                 * )
                     cat << END_OF_USAGE
-USAGE
-    dockback config [job|email|share|schedule]
+usage: dockback config [job|email|share|schedule]
         job         display job configuration options
         email       configure email settings
         share       configure file share settings
@@ -90,8 +85,7 @@ END_OF_USAGE
             ;;
         show )
             cat << END_OF_USAGE
-USAGE
-    dockback show [job|email|share]
+usage: dockback show [job|email|share]
         job         display jobs
         email       display email settings
         share       display file share settings
@@ -99,8 +93,7 @@ END_OF_USAGE
             ;;
         test )
             cat << END_OF_USAGE
-USAGE
-    dockback test [dep|email|share]
+usage: dockback test [dep|email|share]
         dep         verify dependencies are installed
         email       send a test email
         share       try mounting the file share
@@ -108,8 +101,7 @@ END_OF_USAGE
             ;;
         * )
             cat << END_OF_USAGE
-USAGE
-    dockback [up|down|config|show|test]
+usage: dockback [up|down|config|show|test]
         up          display backup options
         down        display restore options
         config      display configuration options
@@ -118,6 +110,20 @@ USAGE
 END_OF_USAGE
             ;;
     esac
+}
+
+#===  FUNCTION  ================================================================
+#         NAME:  exit_on_error
+#  DESCRIPTION:  Exits script if command exits with non-zero exit code.
+# PARAMETER(S):  command [with parameters]
+#===============================================================================
+
+exit_on_error() {
+    "$@"  # Run command with all parameters
+    if [ $? != 0 ]; then
+        echo "[E] Exiting due to non-zero exit code in command '$1'."
+        exit 1
+    fi
 }
 
 #===  FUNCTION  ================================================================
