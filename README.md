@@ -32,7 +32,7 @@ sudo ln -s /opt/dockback/dockback /usr/local/sbin/dockback
 git -C /opt/dockback tag
 
 # Checkout the desired version (e.g. 0.2.0)
-sudo git -C /opt/dockback tags/v0.2.0
+sudo git -C /opt/dockback checkout tags/v0.2.0
 ```
 
 After dockback has been installed, you should modify the configuration file at `/opt/dockback/config`. Configuration options can be found below.
