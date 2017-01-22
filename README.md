@@ -152,3 +152,4 @@ The following features might be added in a future release, in no particular orde
 7. Add a compress option to `file_copy`, in case backup files are not already compressed.
 8. Allow dockback to run from a Docker container.
 9. Check the dockback configuration file for errors.
+10. Handle the configuration file differently (e.g. store in other directory, utilize .gitignore file, include `config.example` file, etc.).
