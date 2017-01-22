@@ -47,8 +47,8 @@ END_OF_USAGE
                 * )
                     cat << END_OF_USAGE
 usage: dockback up [all|job]
-        all         run all backup jobs
-        job         run a specific backup job
+    all         run all backup jobs
+    job         run a specific backup job
 END_OF_USAGE
                     ;;
             esac
@@ -56,8 +56,8 @@ END_OF_USAGE
         down )
             cat << END_OF_USAGE
 usage: dockback down [all|job]
-        all         restore all jobs
-        job         restore a specific job
+    all         restore all jobs
+    job         restore a specific job
 END_OF_USAGE
             ;;
         config )
@@ -65,20 +65,20 @@ END_OF_USAGE
                 job )
                     cat << END_OF_USAGE
 usage: dockback config job [add|edit|enable|disable|remove]
-        add         create a new job
-        edit        edit an existing job
-        enable      allow a job to run automatically (enabled by default)
-        disable     prevent a job from running automatically
-        remove      remove a job from the configuration
+    add         create a new job
+    edit        edit an existing job
+    enable      allow a job to run automatically (enabled by default)
+    disable     prevent a job from running automatically
+    remove      remove a job from the configuration
 END_OF_USAGE
                     ;;
                 * )
                     cat << END_OF_USAGE
 usage: dockback config [job|email|share|schedule]
-        job         display job configuration options
-        email       configure email settings
-        share       configure file share settings
-        schedule    configure dockback to run every $backup_frequency_hours hours
+    job         display job configuration options
+    email       configure email settings
+    share       configure file share settings
+    schedule    configure dockback to run every $backup_frequency_hours hours
 END_OF_USAGE
                     ;;
             esac
@@ -86,27 +86,27 @@ END_OF_USAGE
         show )
             cat << END_OF_USAGE
 usage: dockback show [job|email|share]
-        job         display jobs
-        email       display email settings
-        share       display file share settings
+    job         display jobs
+    email       display email settings
+    share       display file share settings
 END_OF_USAGE
             ;;
         test )
             cat << END_OF_USAGE
 usage: dockback test [dep|email|share]
-        dep         verify dependencies are installed
-        email       send a test email
-        share       try mounting the file share
+    dep         verify dependencies are installed
+    email       send a test email
+    share       try mounting the file share
 END_OF_USAGE
             ;;
         * )
             cat << END_OF_USAGE
 usage: dockback [up|down|config|show|test]
-        up          display backup options
-        down        display restore options
-        config      display configuration options
-        show        display verification options
-        test        display test options
+    up          display backup options
+    down        display restore options
+    config      display configuration options
+    show        display verification options
+    test        display test options
 END_OF_USAGE
             ;;
     esac
