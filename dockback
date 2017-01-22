@@ -422,7 +422,7 @@ execute_jobs() {
                     # Skip if no files were found
                     if [[ ! $orig_files ]]; then
                         echo_email "Failed"
-                        echo_email "[I] Skipping job '$(get_value $job job_name)' because there are no files to back up."
+                        echo_email "[W] Skipping job '$(get_value $job job_name)' because there are no files to back up."
                         ((warnings++))
                         continue
                     fi
