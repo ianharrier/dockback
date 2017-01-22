@@ -113,20 +113,6 @@ END_OF_USAGE
 }
 
 #===  FUNCTION  ================================================================
-#         NAME:  exit_on_error
-#  DESCRIPTION:  Exits script if command exits with non-zero exit code.
-# PARAMETER(S):  command [with parameters]
-#===============================================================================
-
-exit_on_error() {
-    "$@"  # Run command with all parameters
-    if [ $? != 0 ]; then
-        echo "[E] Exiting due to non-zero exit code in command '$1'."
-        exit 1
-    fi
-}
-
-#===  FUNCTION  ================================================================
 #         NAME:  echo_email
 #  DESCRIPTION:  echo string and append to email body.
 # PARAMETER  1:  string (or '-n' for no new line)
@@ -221,7 +207,7 @@ check_dependencies() {
 
     if which mount.cifs >/dev/null 2>&1; then
         if [[ "$1" = "verbose" ]]; then
-            echo_email "[I] 'mount.cifs' is installed"
+            echo_email "[I] 'mount.cifs' is installed."
         fi
     else
         echo_email "[E] 'mount.cifs' cannot be found. Please install 'cifs-utils'."
