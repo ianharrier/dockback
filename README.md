@@ -145,3 +145,4 @@ The following features might be added in a future release, in no particular orde
 6. Ability to backup data by "reaching inside" containers (i.e. without using volumes).
 7. Add a compress option to `file_copy`, in case backup files are not already compressed.
 8. Allow dockback to run from a Docker container.
+9. Check the dockback configuration file for errors.

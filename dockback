@@ -144,7 +144,7 @@ echo_email() {
 
 #===  FUNCTION  ================================================================
 #         NAME:  get_config
-#  DESCRIPTION:  Import and check the dockback configuration file.              # config validation not yet implemented
+#  DESCRIPTION:  Import the dockback configuration file.
 #===============================================================================
 get_config() {
     if [[ -e $config_path ]]; then
@@ -419,7 +419,7 @@ execute_jobs() {
                 continue
             fi
         #-----------------------------------------------------------------------
-        #  file_copy                                                            # nonexistent files are unhandled; delete_after_copy not implemented
+        #  file_copy
         #-----------------------------------------------------------------------
         elif [[ "$(get_value $job job_type)" == "file_copy" ]]; then
             # Make sure the job has a file_path
@@ -427,12 +427,29 @@ execute_jobs() {
                 # Make sure the file_path exists
                 # 'head -1' tests only the first path to handle wildcard file names in file_path
                 if [[ -d "$(dirname $(get_value $job file_path) | head -1)" ]]; then
-                    # file_path exists; backup files in file_path, preserving attributes
+                    # file_path exists; determine files to be backed up
                     if [[ $(get_value $job max_age_minutes) ]]; then
-                        cp -p $(find $(get_value $job file_path) -mmin -$(get_value $job max_age_minutes)) $temp_directory_job
+                        local orig_files=$(find $(get_value $job file_path) -mmin -$(get_value $job max_age_minutes) 2>/dev/null)
                     else
-                        cp -p $(find $(get_value $job file_path)) $temp_directory_job
+                        local orig_files=$(find $(get_value $job file_path) 2>/dev/null)
                     fi
+                    # Skip if no files were found
+                    if [[ ! $orig_files ]]; then
+                        echo_email "Failed"
+                        echo_email "[E] Skipping job '$(get_value $job job_name)' because no valid files exist at '$(get_value $job file_path)'."
+                        ((errors++))
+                        continue
+                    fi
+                    # Backup files, preserving attributes
+                    if [[ $(get_value $job delete_after_copy) == "true" ]]; then
+                        mv $orig_files $temp_directory_job
+                    else
+                        cp -p $orig_files $temp_directory_job
+                    fi
+                    # Rename files, keeping file extension
+                    for file in $temp_directory_job/*; do
+                        mv "$file" "$temp_directory_job/$(get_value $job job_name)_$(date -r $file +%Y%m%dT%H%M%S%z).${file##*.}"
+                    done
                 else
                     echo_email "Failed"
                     echo_email "[E] Skipping job '$(get_value $job job_name)' because file_path '$(get_value $job file_path)' is nonexistent."
