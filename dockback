@@ -5,7 +5,7 @@
 #  DESCRIPTION:  Backup data in Docker containers to a file share
 #
 #       AUTHOR:  Ian Harrier
-#      VERSION:  0.2
+#      VERSION:  0.2.0
 #      LICENSE:  MIT License
 #===============================================================================
 
