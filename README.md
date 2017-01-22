@@ -21,12 +21,18 @@ When naming backup files, dockback appends an ISO 8601 compliant timestamp to th
 
 ## Installing
 
-To install dockback, run the following commands.
+To install a specific version of dockback, run the following commands.
 
 ```bash
 sudo git clone https://github.com/ianharrier/dockback.git /opt/dockback
 sudo chmod +x /opt/dockback/dockback
 sudo ln -s /opt/dockback/dockback /usr/local/sbin/dockback
+
+# List available versions
+git -C /opt/dockback tag
+
+# Checkout the desired version (e.g. 0.2.0)
+sudo git -C /opt/dockback tags/v0.2.0
 ```
 
 After dockback has been installed, you should modify the configuration file at `/opt/dockback/config`. Configuration options can be found below.
