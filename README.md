@@ -4,6 +4,21 @@ Backup data in Docker containers to a file share
 
 **WARNING: This project is under construction. Some features have not yet been implemented. Please test and use at your own risk.**
 
+### Contents
+
+* [About](#about)
+ * [Overview](#overview)
+ * [Backup file naming](#backup-file-naming)
+* [Installing](#installing)
+* [Configuration options](#configuration-options)
+ * [Job types](#job-types)
+  * [`compress_directory`](#compress_directory)
+  * [`file_copy`](#file_copy)
+  * [`mysql_dump`](#mysql_dump)
+  * [`postgres_dump`](#postgres_dump)
+* [Un-installing](#un-installing)
+* [Future work](#future-work)
+
 ## About
 
 ### Overview
