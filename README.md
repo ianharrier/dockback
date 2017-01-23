@@ -7,15 +7,15 @@ Backup data in Docker containers to a file share
 ### Contents
 
 * [About](#about)
- * [Overview](#overview)
- * [Backup file naming](#backup-file-naming)
+  * [Overview](#overview)
+  * [Backup file naming](#backup-file-naming)
 * [Installing](#installing)
 * [Configuration options](#configuration-options)
- * [Job types](#job-types)
-  * [`compress_directory`](#compress_directory)
-  * [`file_copy`](#file_copy)
-  * [`mysql_dump`](#mysql_dump)
-  * [`postgres_dump`](#postgres_dump)
+  * [Job types](#job-types)
+    * [`compress_directory`](#compress_directory)
+    * [`file_copy`](#file_copy)
+    * [`mysql_dump`](#mysql_dump)
+    * [`postgres_dump`](#postgres_dump)
 * [Un-installing](#un-installing)
 * [Future work](#future-work)
 
@@ -83,8 +83,8 @@ sudo apt -y install mailutils
 * `email_subject` Subject on the notification email.
 * `backup_frequency_hours` The frequency in hours at which `cron` will run `dockback up all`.
 * `backup_jobs` Array containing the backup job strings, one per element. Job strings should be formatted as `'key1=value1|key2=value2|key3=value3'` and should contain the following required keys:
- * `job_name` Name of the backup job. Usually similar or identical to the container name. For example: `'job_name=container1|...'`
- * `job_type` Type of backup job. For example: `'job_name=container1|job_type=compress_directory|...'`
+  * `job_name` Name of the backup job. Usually similar or identical to the container name. For example: `'job_name=container1|...'`
+  * `job_type` Type of backup job. For example: `'job_name=container1|job_type=compress_directory|...'`
 
 ### Job types
 
