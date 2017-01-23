@@ -480,6 +480,37 @@ execute_jobs() {
                 continue
             fi
         #-----------------------------------------------------------------------
+        #  postgres_dump
+        #-----------------------------------------------------------------------
+        elif [[ "$(get_value $job job_type)" == "postgres_dump" ]]; then
+            # Make sure the job has a container_name
+            if [[ $(get_value $job container_name) ]]; then
+                local postgres_dump_file_name="$(get_value $job job_name)_$(date +%Y%m%dT%H%M%S%z)"
+                if [[ $(get_value $job db) ]]; then
+                    # db exists; dump specific database
+                    docker exec $(get_value $job container_name) su postgres -c "pg_dump $(get_value $job db)" > $temp_directory_job/$postgres_dump_file_name.sql 2>/dev/null
+                else
+                    # db does not exist; dump all databases
+                    docker exec $(get_value $job container_name) su postgres -c "pg_dumpall" > $temp_directory_job/$postgres_dump_file_name.sql 2>/dev/null
+                fi
+                if [[ $(get_value $job compress) = true ]]; then
+                    zip -q $temp_directory_job/$postgres_dump_file_name.zip $temp_directory_job/$postgres_dump_file_name.sql >/dev/null 2>&1
+                    if [[ -f "$temp_directory_job/$postgres_dump_file_name.zip" ]]; then
+                        rm $temp_directory_job/$postgres_dump_file_name.sql
+                    else
+                        echo_email "Failed"
+                        echo_email "[E] '$postgres_dump_file_name.sql' could not be compressed."
+                        ((errors++))
+                        continue
+                    fi
+                fi
+            else
+                echo_email "Failed"
+                echo_email "[E] Skipping job '$(get_value $job job_name)' because container_name is missing."
+                ((errors++))
+                continue
+            fi
+        #-----------------------------------------------------------------------
         #  invalid job_type
         #-----------------------------------------------------------------------
         else

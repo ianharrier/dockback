@@ -121,6 +121,23 @@ Example job string using all options:
 
 `'job_name=container1|job_type=mysql_dump|container_name=container1|db=exampledb|compress=true'`
 
+#### `postgres_dump`
+
+Dump one or all databases in an [official PostgreSQL container](https://hub.docker.com/_/postgres/).
+
+Job strings should contain the following required key:
+
+* `container_name` Name of the PostgreSQL container.
+
+Job strings may contain the following optional keys:
+
+* `db` Name of the database to be backed up. If this option is not set, all databases will be backed up.
+* `compress` Compress the database dump. If this option is `false` or is not set, the dump will be saved as a `sql` file. If this option is `true`, the `sql` file will be compressed.
+
+Example job string using all options:
+
+`'job_name=container1|job_type=postgres_dump|container_name=container1|db=exampledb|compress=true'`
+
 ## Un-installing
 
 Before uninstalling dockback, run the following command to verify the backup share has been unmounted.
