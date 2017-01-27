@@ -78,8 +78,8 @@ sudo apt -y install mailutils
 * `share_password` Alphanumeric password for `share_username`.
 * `share_domain` Domain name for `share_username`. This variable is optional; leave blank if not in a domain environment.
 * `email_enabled` Whether email notifications are sent prior to exiting. Valid options are `'true'` and `'false'`.
-* `email_from` Email address from which notification emails will be sent. Should be formatted as `username@domain.tld`.
-* `email_to` Email address to which notification emails will be send. Should be formatted as `username@domain.tld`.
+* `email_from` Email address from which notification emails will be sent. Should be formatted as `'username@domain.tld'`.
+* `email_to` Email address to which notification emails will be sent. Should be formatted as `'username@domain.tld'`.
 * `email_subject` Subject on the notification email.
 * `backup_frequency_hours` The frequency in hours at which `cron` will run `dockback up all`.
 * `backup_jobs` Array containing the backup job strings, one per element. Job strings should be formatted as `'key1=value1|key2=value2|key3=value3'` and should contain the following required keys:
@@ -92,11 +92,11 @@ dockback supports a variety of backup types. One type is required per job.
 
 #### `compress_directory`
 
-Compress the files(s) in a directory on the Docker host [which is mounted to a container as a volume]. This job type is designed for containers that do not need special considerations to ensure the backup is application consistent. For example, this job type should not be used for most databases.
+Compress the files(s) in a directory on the Docker host [which is mounted to a container as a volume]. This job type is designed for containers that do not need special considerations to ensure the backup is application consistent. For example, this job type can be used to backup a directory storing uploads from a web form, but it should not be used for most databases.
 
 Job strings should contain the following required key:
 
-* `directory_path` Path to the directory to be compressed.
+* `directory_path` Path of the directory to be compressed.
 
 Example job string using all options:
 
@@ -104,7 +104,7 @@ Example job string using all options:
 
 #### `file_copy`
 
-Copy the file(s) in a directory on the Docker host [which is mounted to a container as a volume]. This job type is designed for containers that are configured to produce their own backup files and store them in a directory on the local file system which is only used for the backup files.
+Copy the file(s) in a directory on the Docker host [which is mounted to a container as a volume]. This job type is designed for containers which produce their own backup files and store them in a directory.
 
 Job strings should contain the following required key:
 
@@ -112,8 +112,8 @@ Job strings should contain the following required key:
 
 Job strings may contain the following optional keys:
 
-* `delete_after_copy` Optionally delete the original file(s). In other words, move (rather than copy) the file(s) to the backup destination. This option is designed for containers that do not automatically delete old backup files.
-* `max_age_minutes` Only copy file(s) younger than the specified number of minutes. This option is useful when (a) `delete_after_copy` is disabled and (b) the container automatically deletes old backup files, as to not copy previously-copied files.
+* `delete_after_copy` Optionally delete the original file(s). In other words, move (rather than copy) the file(s) to the backup destination. This option is designed for containers that do not automatically delete old backup files. Valid options are `true` and `false`, and the default option is `false`.
+* `max_age_minutes` Only copy file(s) younger than the specified number of minutes. This option is useful when (a) `delete_after_copy` is `false` and (b) the container automatically deletes old backup files, as to not copy previously-copied files.
 
 Example job string using all options:
 
@@ -184,4 +184,7 @@ The following features might be added in a future release, in no particular orde
 7. Add a compress option to `file_copy`, in case backup files are not already compressed.
 8. Allow dockback to run from a Docker container.
 9. Check the dockback configuration file for errors.
-10. Handle the configuration file differently (e.g. store in other directory, utilize .gitignore file, include `config.example` file, etc.).
+10. Handle the configuration file differently. For example:
+  * Store in another directory
+  * Utilize `.gitignore` file
+  * Include a `config.example` file
