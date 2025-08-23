@@ -1,8 +1,16 @@
+# WARNING - repo is not maintained
+
+**PLEASE DO NOT USE THIS REPOSITORY IN PRODUCTION.**
+
+This repository is no longer maintained and has been archived. It is being left public for archival and educational purposes.
+
+---
+---
+---
+
 # dockback
 
 Backup data in Docker containers to a file share
-
-**WARNING: This project is under construction. Some features have not yet been implemented. Please test and use at your own risk.**
 
 ### Contents
 
